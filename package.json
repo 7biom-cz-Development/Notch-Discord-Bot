@@ -1,0 +1,28 @@
+{
+  "name": "notch-discord-bot",
+  "version": "1.0.0",
+  "description": "Notch Discord Bot",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/7biom-cz-Development/Notch-Discord-Bot.git"
+  },
+  "keywords": [
+    "Discord",
+    "Bot"
+  ],
+  "author": "CZghost",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/7biom-cz-Development/Notch-Discord-Bot/issues"
+  },
+  "homepage": "https://github.com/7biom-cz-Development/Notch-Discord-Bot#readme",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
+    "mysql": "^2.18.1"
+  }
+}
