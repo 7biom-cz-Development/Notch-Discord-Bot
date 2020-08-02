@@ -17,12 +17,19 @@ const literals = require("./literals.js");
 const { Client, Collection } = require("discord.js");       // Discord.js library -> main driver for this bot
 const { readdirSync } = require("fs");                      // Reading directories/folders
 const { stripIndents } = require("common-tags");            // Format strings in code
+const { Validator } = require("jsonschema");                // JSON Schema validator
 const MySQL = require("mysql");                             // MySQL library -> keeps settings
 const colors = require("colors");                           // Colouring the Node.js output
 const mysql_handler = require("./inc/mysql_handler.js");    // MySQL response handler (non-select queries)
 
 // Look for local environment variables defined in .env file (development mode)
 require("dotenv").config();
+
+// Load locale schema in order to validate locale files being submitted
+const locale_schema = require("./schemas/locale.json");
+
+// Set up validator
+client.validator = new Validator();
 
 // Set up bot client instance, ignore @everyone mentions
 const client = new Client({disableMentions: "everyone"});
@@ -183,6 +190,7 @@ client.mysql.connect(err => {
     if(err) throw err;      // An error occured -> terminate application
     
     // Create tables if they don't exist
+    console.log(`Creating table settings_guild_general`);
     client.mysql.query(stripIndents`
         CREATE TABLE IF NOT EXISTS settings_guild_general
         (
@@ -193,6 +201,7 @@ client.mysql.connect(err => {
             prefix VARCHAR(20)
         )
     `, mysql_handler);
+    console.log(`Creating table settings_emotes_defaults`);
     client.mysql.query(stripIndents`
         CREATE TABLE IF NOT EXISTS settings_emotes_defaults
         (
@@ -206,7 +215,10 @@ client.mysql.connect(err => {
     // Continue further: settings_guild_voting_emotes
 
     // TODO: Get every single query and fill in the blanks
-})
+
+    // End connection when done
+    client.mysql.end();
+});
 
 // Create collections for commands and their aliases
 client.commands   = new Collection();
