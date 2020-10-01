@@ -10,6 +10,13 @@ require('dotenv').config();
 // Load MySQL module
 const MySQL = require("mysql");
 
+// Load JSON Schema Validator module
+const { Validator } = require("jsonschema");
+const validator = new Validator();
+const schemas = {
+    locale: null
+}
+
 // Load Discord.js module
 const Discord = require("discord.js");
 
