@@ -14,7 +14,7 @@ const MySQL = require("mysql");
 const { Validator } = require("jsonschema");
 const validator = new Validator();
 const schemas = {
-    locale: null
+    locale: require("https://github.7biom.cz/json/schemas/Notch/locale.json");
 }
 
 // Load Discord.js module
