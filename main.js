@@ -1,35 +1,27 @@
 /****************************************
  * Notch Discord Bot - created by CZghost
  * 
- * File: main.js (main program entry)
+ * File: main.js (main bot process entry)
  ****************************************/
 
 // Load system environment specific for this bot
 require('dotenv').config();
 
-// Load MySQL module
-const MySQL = require("mysql");
+// Load ShardingManager class from Discord.js module
+const { ShardingManager } = require('discord.js');
+const manager = new ShardingManager('./shard.js', {
+	execArgv: ['--trace-warnings'],
+	//shardArgs: ['--ansi', '--color'],
+	token: process.env.TOKEN,
+});
 
-// Load JSON Schema Validator module
-const { Validator } = require("jsonschema");
-const validator = new Validator();
-const schemas = {
-    locale: require("https://github.7biom.cz/json/schemas/Notch/locale.json");
-}
+// Create a shard -> handling event
+manager.on('shardCreate', shard => console.log(`Master[] Launched shard ${shard.id}`));
 
-// Load Discord.js module
-const Discord = require("discord.js");
+// Sending a message -> handling event
+manager.on('message', (shard, message) => {
+	console.log(`Shard[${shard.id}] : ${message._eval} : ${message._result}`);
+});
 
-// Create new client with @everyone mention disabled
-const client = new Discord.Client({disableMentions: 'everyone'});
-
-// Create collection of commands
-client.commands = new Discord.Collection();
-
-// Create collection of events
-client.events = new Discord.Collection();
-
-// TODO: Read events and commands and put them in collections
-
-// Login the bot
-client.login(process.env.TOKEN);
+// Spawn sharding manager
+manager.spawn();
