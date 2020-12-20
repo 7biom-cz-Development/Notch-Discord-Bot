@@ -10,47 +10,16 @@ require('dotenv').config();
 // Load MySQL module
 const MySQL = require("mysql");
 
-// Load https module
-const https = require('https');
-
 // Load JSON Schema Validator module
 const { Validator } = require("jsonschema");
 const validator = new Validator();
 
 // Load required schemas
 let schemas = {
-    locale: null,               // Locale JSON schema, load from online resource
+    // Filled in by program
+    // locale.json
+    // help.json
 };
-
-https.get('https://github.7biom.cz/json/schemas/Notch/locale.json', (res) => {
-    let error;
-
-    if(res.statusCode !== 200) {
-        error = new Error(`Locale JSON schema failed to load. Status code ${res.statusCode}`);
-    } else if(!/^application\/json/.test(res.headers['content-type'])) {
-        error = new Error(`Locale JSON schema isn't JSON MIME type. Retrieved MIME type ${res.headers['content-type']}`);
-    }
-
-    if(error) {
-        console.error(`Shard[${client.shard.ids[0]}] ERROR: ${error.message}`);
-        res.resume();
-        return;
-    }
-
-    let rawData = '';
-    res.on('data', chunk => { rawData += chunk; });
-    res.on('end', () => {
-        try {
-            schemas.locale = JSON.parse(rawData);
-        } catch(e) {
-            console.error(`Shard[${client.shard.ids[0]}] ERROR: ${e.message}`);
-            return;
-        }
-    });
-}).on('error', e => { console.error(`Shard[${client.shard.ids[0]}] ERROR: ${e.message}`) });
-
-// Debug line
-console.log(schemas);
 
 // Load Discord.js module
 const Discord = require("discord.js");
@@ -64,6 +33,9 @@ client.commands = new Discord.Collection();
 // Create collection of events
 client.events = new Discord.Collection();
 
+// TODO: create command handler
+// TODO: create event handler
+
 // Temporary event listener
 client.on('ready', () => {
     console.log(`Shard[${client.shard.ids[0]}] Client logged in as '${client.user.tag}' with ID '${client.user.id}'`);
@@ -76,7 +48,7 @@ client.login(process.env.TOKEN);
 
 // Listen to signal interruptions
 process.on('SIGINT', () => {
-	console.log(`Shard[${client.shard.ids[0]}] Received SIGINT, terminating with exit code 0`);
+    console.log(`Shard[${client.shard.ids[0]}] Received SIGINT, terminating with exit code 0`);
 	process.exit(0);
 });
 

@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "main": "node main.js",
-    "test": "echo none tests"
+    "test": "echo none tests",
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "dotenv": "^8.2.0",
     "jsonschema": "^1.2.7",
     "mysql": "^2.18.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "typescript": "^4.1.3"
   }
 }
