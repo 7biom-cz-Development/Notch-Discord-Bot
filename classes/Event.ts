@@ -10,9 +10,9 @@ import { Client } from "discord.js";
 
 export class Event {
     public name: string;
-    public run: (client: Client, ...args: any) => void;
+    public run: (client: Client, ...args: any) => Promise<any>;
 
-    constructor(name: string, run: (client: Client, ...args: any) => void) {
+    constructor(name: string, run: (client: Client, ...args: any) => Promise<any>) {
         this.name = name;
         this.run = run;
     }

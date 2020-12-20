@@ -7,6 +7,9 @@
 // Load system environment specific for this bot
 require('dotenv').config();
 
+// Load filesystem module
+const fs = require('fs');
+
 // Load MySQL module
 const MySQL = require("mysql");
 
@@ -27,14 +30,31 @@ const Discord = require("discord.js");
 // Create new client with @everyone mention disabled
 const client = new Discord.Client({disableMentions: 'everyone'});
 
-// Create collection of commands
+// Create collection of commands and events
 client.commands = new Discord.Collection();
-
-// Create collection of events
+client.aliases = new Discord.Collection();
 client.events = new Discord.Collection();
 
-// TODO: create command handler
+// Create command handler
+let command_files_list = fs.readdirSync('./commands').filter(f => f.endsWith('.js'));
+console.log(`Shard[${client.shard.ids[0]}] Loading commands`);
+command_files_list.forEach(f => {
+    let command = require(`./commands/${f}`);
+    client.commands.set(command.name, command);
+    command.aliases.forEach(a => { client.aliases.set(a, command.name); });
+    console.log(`Shard[${client.shard.ids[0]}] Command ${command.name} loaded with aliases [ ${command.aliases.join(', ')} ]`);
+});
+console.log(`Shard[${client.shard.ids[0]}] Commands loaded`);
+
 // TODO: create event handler
+let event_files_list = fs.readdirSync('./events');
+console.log(`Shard[${client.shard.ids[0]}] Loading events`);
+event_files_list.forEach(f => {
+    let event = require(`./events/${f}`);
+    client.events.set(event.name, event);
+    console.log(`Shard[${client.shard.ids[0]}] Event ${event.name} loaded`);
+});
+console.log(`Shard[${client.shard.ids[0]}] Events loaded`);
 
 // Temporary event listener
 client.on('ready', () => {

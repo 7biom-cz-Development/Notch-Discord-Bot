@@ -4,7 +4,7 @@
   "description": "Notch Discord Bot",
   "main": "main.js",
   "scripts": {
-    "main": "node main.js",
+    "start": "node .",
     "test": "echo none tests",
     "tsc": "tsc"
   },

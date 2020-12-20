@@ -10,7 +10,7 @@ import { Command } from '../classes/Command';
 export = new Command(
     'ping',                                     // name
     ['botping', 'latency', 'botlatency'],       // aliases
-    (client: Client, message: Message, args: string[]): void => {
+    async (client: Client, message: Message, args: string[]): Promise<any> => {
         // TODO: Ping command
     }                                           // run
 );
