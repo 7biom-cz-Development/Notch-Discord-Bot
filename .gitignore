@@ -105,11 +105,13 @@ dist
 
 # --- Compiled TypeScript JS files ---
 # Classes
-classes/Command.js
-classes/Event.js
+classes/*.js
+classes/*.js.map
 
 # Commands
-commands/ping.js
+commands/*.js
+commands/*.js.map
 
 # Events
-events/ready.js
+events/*.js
+events/*.js.map
