@@ -39,20 +39,30 @@ client.events = new Discord.Collection();
 let command_files_list = fs.readdirSync('./commands').filter(f => f.endsWith('.js'));
 console.log(`Shard[${client.shard.ids[0]}] Loading commands`);
 command_files_list.forEach(f => {
-    let command = require(`./commands/${f}`);
-    client.commands.set(command.name, command);
-    command.aliases.forEach(a => { client.aliases.set(a, command.name); });
-    console.log(`Shard[${client.shard.ids[0]}] Command ${command.name} loaded with aliases [ ${command.aliases.join(', ')} ]`);
+    try {
+        let command = require(`./commands/${f}`);
+        client.commands.set(command.name, command);
+        command.aliases.forEach(a => { client.aliases.set(a, command.name); });
+        console.log(`Shard[${client.shard.ids[0]}] Command ${command.name} loaded with aliases [ ${command.aliases.join(', ')} ]`);
+    } catch(e) {
+        // An error was thrown -> do nothing and log the error in console
+        console.error(`Shard[${client.shard.ids[0]}] ERROR: ${e.messsage}`);
+    }
 });
 console.log(`Shard[${client.shard.ids[0]}] Commands loaded`);
 
-// TODO: create event handler
+// Create event handler
 let event_files_list = fs.readdirSync('./events');
 console.log(`Shard[${client.shard.ids[0]}] Loading events`);
 event_files_list.forEach(f => {
-    let event = require(`./events/${f}`);
-    client.events.set(event.name, event);
-    console.log(`Shard[${client.shard.ids[0]}] Event ${event.name} loaded`);
+    try {
+        let event = require(`./events/${f}`);
+        client.events.set(event.name, event);
+        console.log(`Shard[${client.shard.ids[0]}] Event ${event.name} loaded`);
+    } catch(e) {
+        // An error was thrown -> do nothing and log the error in console
+        console.error(`Shard[${client.shard.ids[0]}] ERROR: ${e.message}`);
+    }
 });
 console.log(`Shard[${client.shard.ids[0]}] Events loaded`);
 
@@ -61,7 +71,7 @@ client.on('ready', () => {
     console.log(`Shard[${client.shard.ids[0]}] Client logged in as '${client.user.tag}' with ID '${client.user.id}'`);
 });
 
-// TODO: Read events and commands and put them in collections
+// TODO: List through events collection and assign them to the client object instance
 
 // Log the bot in
 client.login(process.env.TOKEN);
