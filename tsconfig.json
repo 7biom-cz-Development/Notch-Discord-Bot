@@ -5,8 +5,10 @@
       "noImplicitAny": true,
       "removeComments": true,
       "preserveConstEnums": true,
-      "sourceMap": true
+      "sourceMap": true,
+      "moduleResolution": "node"
     },
+    "allowJs": true,
     "include": ["classes/*.ts", "commands/*.ts", "events/*.ts"],
     "exclude": ["node_modules", "**/*.spec.ts"]
 }
