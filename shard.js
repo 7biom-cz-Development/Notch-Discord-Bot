@@ -13,17 +13,6 @@ const fs = require('fs');
 // Load MySQL module
 const MySQL = require("mysql");
 
-// Load JSON Schema Validator module
-const { Validator } = require("jsonschema");
-const validator = new Validator();
-
-// Load required schemas
-let schemas = {
-    // Filled in by program
-    // locale.json
-    // help.json
-};
-
 // Load Discord.js module
 const Discord = require("discord.js");
 
