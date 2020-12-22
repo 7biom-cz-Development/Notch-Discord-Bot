@@ -13,16 +13,34 @@ const fs = require('fs');
 // Load MySQL module
 const MySQL = require("mysql");
 
+// Load Locale module
+const { Locale } = require('./classes/Locale');
+
 // Load Discord.js module
 const Discord = require("discord.js");
 
 // Create new client with @everyone mention disabled
 const client = new Discord.Client({disableMentions: 'everyone'});
 
-// Create collection of commands and events
+// Create collection of locales, commands and events
+client.locales = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.events = new Discord.Collection();
+
+// Read and validate locale JSON files
+let locale_files_list = fs.readdirSync('./locales').filter(f => f.endsWith('.json'));
+console.log(`Shard[${client.shard.ids[0]}] Loading locales`);
+locale_files_list.forEach(f => {
+    try {
+        let code = f.substring(0, f.lastIndexOf('.'));
+        let locale = require(`./locales/${f}`);
+        client.locales.set(code, new Locale(code, locale));
+    } catch(e) {
+        // An error was thrown -> do nothing and log the error in console
+        console.error(`Shard[${client.shard.ids[0]}] ERROR: ${e.message}`);
+    }
+});
 
 // Create command handler
 let command_files_list = fs.readdirSync('./commands').filter(f => f.endsWith('.js'));

@@ -24,7 +24,8 @@ export class Command {
         let promise = fetch('https://github.7biom.cz/json/schemas/Notch/help.json')
             .then((res: { json: () => any; }) => res.json()).then((data: any) => {Object.assign(schema, data)});
 
-        while(util.inspect(promise).includes("pending"));   // Loop until promise is finished
+        // Debug line
+        console.log(schema);
 
         const validator = new Validator();
         if(!validator.validate(help, schema)) throw new Error(`Validation of help object for command ${name} failed!`);
