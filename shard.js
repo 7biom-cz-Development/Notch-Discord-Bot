@@ -45,8 +45,10 @@ locale_files_list.forEach(async f => {
         // Validate locale JSON
         if(!await Locale.validate(locale_json)) throw new Error(`Locale ${code} failed to validate!`);
 
-        // Assign the locale
+        // Add the locale into collection
         client.locales.set(code, locale);
+
+        // Success
         console.log(`Shard[${client.shard.ids[0]}] Locale ${code} loaded`);
     } catch(e) {
         // An error was thrown -> do nothing and log the error in console
@@ -69,9 +71,13 @@ command_files_list.forEach(async f => {
         // Validate help object of that command
         if(!await Command.validate(command.help)) throw new Error(`Command ${command.name} failed to validate its help JSON!`);
 
-        // Assign the command
+        // Add the command into collection
         client.commands.set(command.name, command);
+
+        // Add each alias for this command into collection
         command.aliases.forEach(a => { client.aliases.set(a, command.name); });
+
+        // Success
         console.log(`Shard[${client.shard.ids[0]}] Command ${command.name} loaded with aliases [ ${command.aliases.join(', ')} ]`);
     } catch(e) {
         // An error was thrown -> do nothing and log the error in console
@@ -89,24 +95,23 @@ event_files_list.forEach(async f => {
         let event = require(`./events/${f}`);
 
         // Check if the event is disabled
-        if(event.disabled) return console.log(`Shard[${client.shard.ids[0]}] Event ${event.name} disabled, skipping`);
+        if(event.disabled) return console.log(`Shard[${client.shard.ids[0]}] Event '${event.name}' disabled, skipping`);
 
-        // TODO: Assign the event (for now it is in collection)
+        // Add the event into collection
         client.events.set(event.name, event);
-        console.log(`Shard[${client.shard.ids[0]}] Event ${event.name} loaded`);
+
+        // Assign the event to client's events listener
+        if(event.once) client.once(event.name, event.run.bind(null, client));       // Does it run only once?
+        else client.on(event.name, event.run.bind(null, client));
+
+        // Success
+        console.log(`Shard[${client.shard.ids[0]}] Event '${event.name}' loaded`);
     } catch(e) {
         // An error was thrown -> do nothing and log the error in console
         console.error(`Shard[${client.shard.ids[0]}] ERROR: ${e.message} | Error stack below`);
         console.error(e.stack);
     }
 });
-
-// Temporary event listener
-client.on('ready', () => {
-    console.log(`Shard[${client.shard.ids[0]}] Client logged in as '${client.user.tag}' with ID '${client.user.id}'`);
-});
-
-// TODO: List through events collection and assign them to the client object instance
 
 // Log the bot in
 client.login(process.env.TOKEN);
@@ -117,8 +122,13 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
+process.on('SIGTERM', () => {
+    console.log(`Shard[${client.shard.ids[0]}] Received SIGTERM, terminating with exit code 0`);
+    process.exit(0);
+});
+
 // Listen to exit
 process.on('exit', (code) => {
-    client.destroy();     // Log the bot out on termination
+    client.destroy();               // Log the bot out on termination
     console.log(`Shard[${client.shard.ids[0]}] Process terminated with exit code ${code}`);
 });

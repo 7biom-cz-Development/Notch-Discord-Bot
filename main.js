@@ -32,8 +32,13 @@ process.on('SIGINT', () => {
 	process.exit(0);
 });
 
+process.on('SIGTERM', () => {
+	console.log('Master[] Received SIGTERM, terminating with exit code 0');
+	process.exit(0);
+});
+
 // Listen to exit
 process.on('exit', (code) => {
-    manager.broadcastEval(`process.exit(${code})`);	// Broadcast process exit on all shards
+    manager.broadcastEval(`process.exit(${code})`);             // Broadcast process exit on all shards
     console.log(`Master[] Process terminated with exit code ${code}`);
 });
