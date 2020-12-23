@@ -6,7 +6,7 @@
 
 const fetch = require('node-fetch');
 import { Validator } from 'jsonschema';
-import { Client, Message, Util } from 'discord.js';
+import { Client, Message } from 'discord.js';
 
 export class Command {
     // Public properties
