@@ -22,7 +22,8 @@ export class Event {
     // Class constructor
     constructor(name: string, once: boolean, disabled: boolean, run: (client: Client, ...args: any) => Promise<any>) {
         this.name = name;
-        this.run = run;
+        this.once = once;
         this.disabled = disabled;
+        this.run = run;
     };
 }
