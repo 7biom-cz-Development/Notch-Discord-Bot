@@ -5,8 +5,7 @@
  ****************************************/
 
 const fetch = require('node-fetch');
-const util = require('util');
-import { Validator, ValidatorResult } from 'jsonschema';
+import { Validator } from 'jsonschema';
 
 export class Locale {
     // Public properties
