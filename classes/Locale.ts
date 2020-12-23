@@ -6,34 +6,33 @@
 
 const fetch = require('node-fetch');
 const util = require('util');
-import { Validator } from 'jsonschema';
+import { Validator, ValidatorResult } from 'jsonschema';
 
 export class Locale {
+    // Public properties
     public code: string;
     public name: string;
     public author: string;
     public locales: {[key: string]: any};
 
-    constructor(code: string, json: any) {
-        // Get locale code
-        this.code = code;
-
-        // Load locale JSON and schema for validation
-        let locale_json = json;
-        let schema = {};
-        let promise = fetch('https://github.7biom.cz/json/schemas/Notch/locale.json')
-            .then((res: { json: () => any; }) => res.json()).then((data: any) => {Object.assign(schema, data)});
-
-        // Debug line
-        console.log(schema);
+    public static validate = async (json: {[key: string]: any} ): Promise<boolean> => {
+        // Load schema for validation
+        let schema: {[key: string]: any} = await fetch('https://github.7biom.cz/json/schemas/Notch/locale.json')
+            .then((res: { json: () => {[key: string]: any}; }) => res.json());
 
         // Validate
         const validator = new Validator();
-        if(!validator.validate(locale_json, schema)) throw new Error(`Validation of locale object for ${code} failed!`);
+        return validator.validate(json, schema).valid;
+    };
 
-        // Retrieve rest of the attributes from loaded and validated JSON
-        this.name = locale_json.name;           // locale translated name
-        this.author = locale_json.author;       // locale author
-        this.locales = locale_json.locales;     // locale strings
+    // Class constructor
+    constructor(code: string, json: {[key: string]: any}) {
+        // Get locale code
+        this.code = code;
+
+        // Retrieve rest of the attributes from loaded JSON
+        this.name = json.name || null;                  // locale translated name
+        this.author = json.author || null;              // locale author
+        this.locales = json.locales || null;            // locale strings
     }
 }
