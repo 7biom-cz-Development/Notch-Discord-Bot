@@ -14,6 +14,7 @@ export class Command {
     public name: string;
     public aliases: string[];
     public help: {[key: string]: any};
+    public disabled: boolean;
     public run: (client: Client, message: Message, args: string[]) => Promise<any>;
 
     // Public static methods
@@ -28,11 +29,12 @@ export class Command {
     };
 
     // Class constructor
-    constructor(name: string, aliases: string[], help: {[key: string]: any}, run: (client: Client, message: Message, args: string[]) => Promise<any>) {
+    constructor(name: string, aliases: string[], help: {[key: string]: any}, disabled: boolean, run: (client: Client, message: Message, args: string[]) => Promise<any>) {
         // Assign objects
         this.name = name;
         this.aliases = aliases;
         this.help = help;
+        this.disabled = disabled;
         this.run = run;
     }
 }

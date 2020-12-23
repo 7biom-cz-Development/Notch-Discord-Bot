@@ -11,6 +11,7 @@ export = new Command(
     'ping',                                     // name
     ['botping', 'latency', 'botlatency'],       // aliases
     require('./help_json/ping.json'),           // help
+    false,                                      // disabled
     async (client: Client, message: Message, args: string[]): Promise<any> => {
         // TODO: Ping command
     }                                           // run

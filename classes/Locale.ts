@@ -13,6 +13,7 @@ export class Locale {
     public code: string;
     public name: string;
     public author: string;
+    public disabled: boolean;
     public locales: {[key: string]: any};
 
     public static validate = async (json: {[key: string]: any} ): Promise<boolean> => {
@@ -27,10 +28,11 @@ export class Locale {
 
     // Class constructor
     constructor(code: string, json: {[key: string]: any}) {
-        // Get locale code
+        // Get locale code and disabled status
         this.code = code;
 
         // Retrieve rest of the attributes from loaded JSON
+        this.disabled = json.disabled || false;         // locale disabled status
         this.name = json.name || null;                  // locale translated name
         this.author = json.author || null;              // locale author
         this.locales = json.locales || null;            // locale strings

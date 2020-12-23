@@ -9,6 +9,8 @@ import { Event } from '../classes/Event';
 
 export = new Event(
     'ready',                        // name
+    false,                          // once
+    false,                          // disabled
     async (client: Client): Promise<any> => {
         console.log(`Shard[${client.shard.ids[0]}] Client logged in as '${client.user.tag}' with ID '${client.user.id}'`);
     }                               // run

@@ -39,6 +39,9 @@ locale_files_list.forEach(async f => {
         let locale_json = require(`./locales/${f}`);
         let locale = new Locale(code, locale_json);
 
+        // Check if the locale has disabled status
+        if(locale.disabled) return console.log(`Shard[${client.shard.ids[0]}] Locale ${code} disabled, skipping`);
+
         // Validate locale JSON
         if(!await Locale.validate(locale_json)) throw new Error(`Locale ${code} failed to validate!`);
 
@@ -60,6 +63,9 @@ command_files_list.forEach(async f => {
         // Retrieve requested command class instance
         let command = require(`./commands/${f}`);
 
+        // Check command disabled status
+        if(command.disabled) return console.log(`Shard[${client.shard.ids[0]}] Command ${command.name} disabled, skipping`);
+
         // Validate help object of that command
         if(!await Command.validate(command.help)) throw new Error(`Command ${command.name} failed to validate its help JSON!`);
 
@@ -79,7 +85,13 @@ let event_files_list = fs.readdirSync('./events').filter(f => f.endsWith('.js'))
 console.log(`Shard[${client.shard.ids[0]}] Loading events`);
 event_files_list.forEach(async f => {
     try {
+        // Retrieve event instance
         let event = require(`./events/${f}`);
+
+        // Check if the event is disabled
+        if(event.disabled) return console.log(`Shard[${client.shard.ids[0]}] Event ${event.name} disabled, skipping`);
+
+        // TODO: Assign the event (for now it is in collection)
         client.events.set(event.name, event);
         console.log(`Shard[${client.shard.ids[0]}] Event ${event.name} loaded`);
     } catch(e) {
